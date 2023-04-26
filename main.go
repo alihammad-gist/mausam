@@ -8,6 +8,7 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"strings"
 
 	externalip "github.com/glendc/go-external-ip"
 )
@@ -38,9 +39,11 @@ func main() {
 		return
 	}
 
-	w := getFormattedWeather(g)
+	w := strings.ReplaceAll(
+		getFormattedWeather(g), " ", "",
+	)
 	withLabel := fmt.Sprintf(
-		"%s: %s", g.City, w,
+		"%s %s", city_label(g.City), w,
 	)
 	fmt.Printf(withLabel)
 }
@@ -91,7 +94,7 @@ func getIp() net.IP {
 // appends the city name
 func getFormattedWeather(g geoLoc) string {
 	url := fmt.Sprintf(
-		"https://wttr.in/%s?format=2",
+		"https://wttr.in/%s?format=1",
 		g.Loc,
 	)
 
